@@ -54,7 +54,7 @@ public class Character {
                         i++;
                     }
                     try {
-                        Thread.sleep(round(Gdx.graphics.getDeltaTime() * 1000));
+                        Thread.sleep(round(Gdx.graphics.getDeltaTime() * 1000)); // Increase state time every second
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -72,9 +72,6 @@ public class Character {
             }
             play();
             RogueLife.rotateCamera(rotationSpeed);
-            double direction = RogueLife.rotateBy(RogueLife.cameraRotation, -90);
-            //x += (float) sin(toRadians(direction)) * dist;
-            //y += (float) cos(toRadians(direction)) * dist;
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             if (!flipX) {
@@ -82,9 +79,6 @@ public class Character {
             }
             play();
             RogueLife.rotateCamera(-rotationSpeed);
-            double direction = RogueLife.rotateBy(RogueLife.cameraRotation, 90);
-            //x += (float) sin(toRadians(direction)) * dist;
-            //y += (float) cos(toRadians(direction)) * dist;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             play();
@@ -99,8 +93,8 @@ public class Character {
             y += (float) cos(toRadians(direction)) * dist;
         }
     }
-    public void setAnim(String name) {
-        setAnim(name, -1);
+    public void setAnim(String name) { // -1 means that the whole animation will be played after a call
+        setAnim(name, -1); // An animation step in its place means the frame, where the animation will be stopped (e.g. a step of one leg)
     }
     public void setAnim(String name, int animStep) {
         if (RogueLife.animations.containsKey(name)) {
@@ -114,6 +108,7 @@ public class Character {
             stateTime = 0.0f;
         }
     }
+    // Returns either a single-frame texture or a frame of an animation
     public TextureRegion getKey() throws IllegalArgumentException {
         if (texture != null) {
             TextureRegion temp = texture;
@@ -138,13 +133,14 @@ public class Character {
             return 1;
         }
         double angleA = RogueLife.FOV / 2;
-        double legA = RogueLife.playerY;
+        double legA = RogueLife.playerY; // Distance from the bottom of the screen to the player sprite
         double hypotenuse = legA / cos(toRadians(angleA));
         double angleB = 90 - angleA;
         double legB = (hypotenuse * cos(toRadians(angleB)));
-        float playerDistance = (float) legB;
+        float playerDistance = (float) legB; // Distance from the camera to the player in the world
         return playerDistance / (playerDistance + getOffset().y);
     }
+    // Rotated vector from the player to the object
     public Vector2 getOffset() {
         return new Vector2(x - player.x, y - player.y).rotateDeg(RogueLife.cameraRotation);
     }
@@ -158,13 +154,8 @@ public class Character {
         if (player == null) {
             return RogueLife.playerY;
         }
-        double angleA = RogueLife.FOV / 2;
-        double angleB = 90 - angleA;
-        double legB = getOffset().y;
-        double hypotenuse = legB / cos(toRadians(angleB));
-        double legA = hypotenuse * cos(toRadians(angleA));
-        float offsetY = (float) legA;
-        return min(RogueLife.playerY + offsetY, RogueLife.horizonY - getHeight() / 2);
+        float _y = RogueLife.playerY + (getOffset().y / RogueLife.viewDistance) * (RogueLife.SCREEN_HEIGHT - RogueLife.playerY) * getSizeModifier();
+        return min(_y, RogueLife.horizonY - getHeight() / 2);
     }
     public float getWidth() {
         if (player != null) {

@@ -48,7 +48,7 @@ public class WorldScreen implements Screen {
         }
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        camera.setToOrtho(false, RogueLife.SCREEN_WIDTH, RogueLife.SCREEN_HEIGHT);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class WorldScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.polyBatch.begin();
-        drawer.filledRectangle(0, 0, 800, RogueLife.horizonY, Color.FOREST);
+        drawer.filledRectangle(0, 0, RogueLife.SCREEN_WIDTH, RogueLife.horizonY, Color.FOREST);
         game.polyBatch.end();
 
         game.batch.begin();
@@ -76,9 +76,9 @@ public class WorldScreen implements Screen {
             .filter(o -> o.getSizeModifier() > 0.2f)
             .filter(o -> o.getSizeModifier() < 2.0f)
             .filter(o -> o.getOnScreenX() > -o.getWidth())
-            .filter(o -> o.getOnScreenX() < 800)
+            .filter(o -> o.getOnScreenX() < RogueLife.SCREEN_WIDTH)
             .filter(o -> o.getOnScreenY() > -o.getHeight())
-            .filter(o -> o.getOnScreenY() < 500)
+            .filter(o -> o.getOnScreenY() < RogueLife.SCREEN_HEIGHT)
             .sorted((a, b) -> -round((a.getOnScreenY() - b.getOnScreenY()) / abs(a.getOnScreenY() - b.getOnScreenY())))
             .collect(Collectors.toList());
         for(Character object : objectsToDraw) {
