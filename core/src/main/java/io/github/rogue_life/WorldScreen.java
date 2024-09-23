@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +38,7 @@ public class WorldScreen implements Screen {
         //tree.x = 100;
         //tree.y = 0;
         //tree.setPlayer(player);
+        //objects.add(tree);
         for (int i = 0; i < 100; i++) {
             Character tree = new Character("Tree", "tree0");
             tree.x = MathUtils.random(-3000,3000);
@@ -68,12 +68,8 @@ public class WorldScreen implements Screen {
 
         game.batch.begin();
         player.input();
-        //game.batch.draw(player.getKey(), RogueLife.playerX - 24, RogueLife.playerY);
-        //if (tree.getSizeModifier() > 0.2f) {
-            //game.batch.draw(tree.getKey(), tree.getOnScreenX(), tree.getOnScreenY(), tree.getWidth(), tree.getHeight());
-        //}
         List<Character> objectsToDraw = objects.stream()
-            .filter(o -> o.getSizeModifier() > 0.2f)
+            .filter(o -> o.getSizeModifier() > 0.1f)
             .filter(o -> o.getSizeModifier() < 2.0f)
             .filter(o -> o.getOnScreenX() > -o.getWidth())
             .filter(o -> o.getOnScreenX() < RogueLife.SCREEN_WIDTH)

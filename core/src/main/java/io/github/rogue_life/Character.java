@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.Comparator;
-
 import static java.lang.Math.*;
 
 public class Character {
@@ -70,14 +68,14 @@ public class Character {
             if (flipX) {
                 flipX = false;
             }
-            play();
+            //play();
             RogueLife.rotateCamera(rotationSpeed);
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             if (!flipX) {
                 flipX = true;
             }
-            play();
+            //play();
             RogueLife.rotateCamera(-rotationSpeed);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -132,13 +130,10 @@ public class Character {
         if (player == null) {
             return 1;
         }
-        double angleA = RogueLife.FOV / 2;
-        double legA = RogueLife.playerY; // Distance from the bottom of the screen to the player sprite
-        double hypotenuse = legA / cos(toRadians(angleA));
-        double angleB = 90 - angleA;
-        double legB = (hypotenuse * cos(toRadians(angleB)));
-        float playerDistance = (float) legB; // Distance from the camera to the player in the world
-        return playerDistance / (playerDistance + getOffset().y);
+        // We assume, that at the max of viewDistance the object's size is at x0.2,
+        //  therefore it's x1 at viewDistance * 0.2
+        float playerDistance = RogueLife.viewDistance * 0.2f;
+        return max(playerDistance / (playerDistance + getOffset().y),0);
     }
     // Rotated vector from the player to the object
     public Vector2 getOffset() {
@@ -146,7 +141,7 @@ public class Character {
     }
     public float getOnScreenX() {
         if (player == null) {
-            return RogueLife.playerX;
+            return RogueLife.playerX - getWidth() / 2;
         }
         return RogueLife.playerX + getOffset().x * getSizeModifier() - getWidth() / 2;
     }
@@ -154,8 +149,7 @@ public class Character {
         if (player == null) {
             return RogueLife.playerY;
         }
-        float _y = RogueLife.playerY + (getOffset().y / RogueLife.viewDistance) * (RogueLife.SCREEN_HEIGHT - RogueLife.playerY) * getSizeModifier();
-        return min(_y, RogueLife.horizonY - getHeight() / 2);
+        return RogueLife.horizonY - max(1 - (getOffset().y / RogueLife.viewDistance), 0) * (RogueLife.horizonY - RogueLife.playerY) * getSizeModifier();
     }
     public float getWidth() {
         if (player != null) {

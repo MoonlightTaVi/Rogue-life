@@ -4,10 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
-
-import static java.lang.Math.*;
 
 
 public class RogueLife extends Game {
@@ -23,10 +20,7 @@ public class RogueLife extends Game {
     public static final float playerX = 400.0f;
     public static final float playerY = 150.0f;
     public static final float horizonY = 400.0f;
-    public static final float viewDistance = 800.0f;
-    public static final double FOV = 120 + 35; // It's not actually a vertical FOV, as the camera is a bit lowered in X-axis
-                                            // (If we set the FOV to 120, which is usual for most of the games, we'll get such  a view
-                                            //  as if camera wasn't rotated - the objects won't go up on the screen on increasing distance)
+    public static final float viewDistance = 3000.0f;
     public static float cameraRotation = 0;
 
     public SpriteBatch batch;
